@@ -1,19 +1,42 @@
+Type CircuitBoard
+
+
+EndType
+
+Type Chip
+
+
+EndType
+
+
+Type RAM
+	
+	
+EndType
+
+
+Type DataBus Extends Channel
+
+EndType 
+
 '/* Synchronous Address Multiplexer (SAM) Emulator class */
 
 
-Type MC6883 
+Type MC6883 Extends Chip
+	
+	
 
-    Field MC6809
-    Field MC6847
-    Field RAM
-    
-    Public MC6883() 
-    {
-        Memory = New RAM();
-        CPU = New MC6809(Memory);
-        VDG = New MC6847(Memory);        
-    }
-    
+	Method New()
+		
+		
+	EndMethod
+	
+	Method PowerOn()
+		
+		
+	EndMethod
+	
+Rem	    
     Public void powerOn()
     {
         For (Int i=0;i<10;i++)
@@ -28,7 +51,11 @@ Type MC6883
                 
     }
 }
+EndRem
 
+EndType
+
+Rem
 package COCOON.src.CoCoHardware;
 
 /* MC6809E CPU Emulator class                           */
@@ -36,58 +63,58 @@ package COCOON.src.CoCoHardware;
 /* An appropriate Public license is being investigated  */
 /* In the meantime please contact me before using this  */
 
-Public class MC6809 
-{
-    //*Registers
-    Short programCounter;
-    Byte registerA;
-    Byte registerB;
-    Short registerD;
-    Byte conditionCode;
-    Short pointerX;
-    Short pointerY;
-    Short systemStack;
-    Short userStack;
-    Byte directPage;
-    boolean readWrite;
+EndRem
+
+Type MC6809 Extends Chip
+
+	Field programCounter : Short 
+	Field registerA : Byte 
+	Field registerB : Byte 
+	Field registerD : Short 
+	Field conditionCode : Byte 
+	Field pointerX : Short 
+	Field pointerY : Short 
+	Field systemStack : Short 
+	Field userStack : Short
+	Field directPage : Byte
+	Field readWrite : Short
     
-    //*"implied registers"
-    Byte currentOpcode;
-    Byte currentPostbyte;
-    Byte currentAddressMSB;
-    Byte currentAddressLSB;
-    Byte activeByte;
+    ' "implied registers"
+	Field currentOpcode : Byte 
+	Field currentPostbyte : Byte
+ 	Field currentAddressMSB : Byte
+ 	Field currentAddressLSB : Byte
+	Field activeByte : Byte
     
-    //*utilitary variables
-    Int cycleCounter;
-    char addressingMode;
+    ' utilitary variables
+	Field cycleCounter : Int
+	Field addressingMode : String
     
-    //*Object references
+    ' Object references
     RAM memory;
     
-    Public MC6809(RAM mem) 
-    {
-        //initialize
-        programCounter = 0x0000;
-        registerA = 0x00;
-        registerB = 0x00;
-        registerD = 0x0000;
-        conditionCode = 0x00;
-        pointerX = 0x0000;
-        pointerY = 0x0000;
-        systemStack = 0x0000;
-        userStack = 0x0000;
-        directPage = 0x00;
-        readWrite = False;
+    Method New(RAM mem) 
+        ' initialize
+        programCounter = 0x0000
+        registerA = 0x00
+        registerB = 0x00
+        registerD = 0x0000
+        conditionCode = 0x00
+        pointerX = 0x0000
+        pointerY = 0x0000
+        systemStack = 0x0000
+        userStack = 0x0000
+        directPage = 0x00
+        readWrite = False
         
-        currentOpcode = 0x00;
-        currentPostbyte = 0x00;
-        currentAddressMSB = 0x00;
-        currentAddressLSB = 0x00;
-        activeByte = 0x00;
+        currentOpcode = 0x00
+        currentPostbyte = 0x00
+        currentAddressMSB = 0x00
+        currentAddressLSB = 0x00
+        activeByte = 0x00
         
-        cycleCounter = 1; 
-        addressingMode = 'p';        
+        cycleCounter = 1
+        addressingMode = "p"        
         
         memory = mem; 
     }
