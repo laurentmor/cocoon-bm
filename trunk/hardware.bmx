@@ -55,16 +55,6 @@ EndRem
 
 EndType
 
-Rem
-package COCOON.src.CoCoHardware;
-
-/* MC6809E CPU Emulator class                           */
-/* Copyright 2007 Fedor Steeman (For the time being     */
-/* An appropriate Public license is being investigated  */
-/* In the meantime please contact me before using this  */
-
-EndRem
-
 Type MC6809 Extends Chip
 
 	Field programCounter : Short 
@@ -117,8 +107,9 @@ Type MC6809 Extends Chip
         addressingMode = "p"        
         
         memory = mem; 
-    }
-    
+    EndMethod
+
+Rem    
     Public void clockActivate()
     {
         Short addressToBeUsed = 0;
@@ -259,12 +250,7 @@ Type MC6809 Extends Chip
     }
     
 }
-package COCOON.src.CoCoHardware;
 
-/* MC6847 VDG Video Display Generator Emulator class    */
-/* Copyright 2007 Fedor Steeman (For the time being     */
-/* An appropriate Public license is being investigated  */
-/* In the meantime please contact me before using this  */
 
 Public class MC6847
 {
@@ -289,12 +275,13 @@ Public class MC6847
     
     
 }
-package COCOON.src.CoCoHardware;
+EndRem
 
-/* Dynamic Memory (RAM) Emulator class                  */
-/* Copyright 2007 Fedor Steeman (For the time being     */
-/* An appropriate Public license is being investigated  */
-/* In the meantime please contact me before using this  */
+
+EndType
+
+
+Rem
 
 Public class RAM
 {
@@ -355,3 +342,4 @@ Public class RAM
     }
     
 }
+EndRem
