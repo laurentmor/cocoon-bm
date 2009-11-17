@@ -14,10 +14,16 @@ Type RAM
 	
 EndType
 
+Type Line Extends Channel
 
-Type DataBus Extends Channel
+EndType
+
+
+Type Bus Extends Channel
 
 EndType 
+
+
 
 '/* Synchronous Address Multiplexer (SAM) Emulator class */
 
@@ -80,8 +86,12 @@ Type MC6809 Extends Chip
 	Field cycleCounter : Int
 	Field addressingMode : String
     
-    ' Object references
-    RAM memory;
+    ' Object references TODO: obsolete
+    Field memory : RAM
+
+	'New approach: databus
+	Field databus : Bus
+	Field addressbus : Bus
     
     Method New(RAM mem) 
         ' initialize
