@@ -93,7 +93,7 @@ Type MC6809 Extends Chip
 	Field databus : Bus
 	Field addressbus : Bus
     
-    Method New(RAM mem) 
+    Method New() 
         ' initialize
         programCounter = 0x0000
         registerA = 0x00
@@ -115,8 +115,7 @@ Type MC6809 Extends Chip
         
         cycleCounter = 1
         addressingMode = "p"        
-        
-        memory = mem; 
+
     EndMethod
 
 Rem    
