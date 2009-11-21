@@ -15,7 +15,7 @@ Type Display
 		
 			For x=1 To hsync
 				
-				SetPixel(x, y, frame[i])
+				'SetPixel(x, y, frame[i])
 				
 				i = i + 1
 			Next 

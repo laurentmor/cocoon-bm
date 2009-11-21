@@ -8,6 +8,17 @@ Type Chip
 
 EndType
 
+Type Clockable
+	
+	
+	
+	Method ClockActivate()
+	
+	
+	EndMethod
+	
+EndType
+
 
 Type RAM
 	
@@ -16,10 +27,6 @@ EndType
 
 Type Line Extends Channel
 
-EndType
-
-
-Type Bus Extends Channel
 
 EndType 
 
@@ -28,7 +35,11 @@ EndType
 '/* Synchronous Address Multiplexer (SAM) Emulator class */
 
 
-Type MC6883 Extends Chip
+
+Type MC6883
+	
+	Field Qlisteners:Clockable[]
+	Field Tlisteners:Clockable[]
 	
 	
 
@@ -37,7 +48,7 @@ Type MC6883 Extends Chip
 		
 	EndMethod
 	
-	Method PowerOn()
+	Method PowerOn(t:Thread)
 		
 		
 	EndMethod
@@ -61,7 +72,7 @@ EndRem
 
 EndType
 
-Type MC6809 Extends Chip
+Type MC6809 Extends Clockable
 
 	Field programCounter : Short 
 	Field registerA : Byte 
@@ -87,31 +98,24 @@ Type MC6809 Extends Chip
 	Field addressingMode : String
     
     ' Object references TODO: obsolete
-    Field memory : RAM
-
-	'New approach: databus
-	Field databus : Bus
-	Field addressbus : Bus
-    
-    Method New() 
         ' initialize
-        programCounter = 0x0000
-        registerA = 0x00
-        registerB = 0x00
-        registerD = 0x0000
-        conditionCode = 0x00
-        pointerX = 0x0000
-        pointerY = 0x0000
-        systemStack = 0x0000
-        userStack = 0x0000
-        directPage = 0x00
+        programCounter = $0000
+        registerA = $00
+        registerB = $00
+        registerD = $0000
+        conditionCode = $00
+        pointerX = $0000
+        pointerY = $0000
+        systemStack = $0000
+        userStack = $0000
+        directPage = $00
         readWrite = False
         
-        currentOpcode = 0x00
-        currentPostbyte = 0x00
-        currentAddressMSB = 0x00
-        currentAddressLSB = 0x00
-        activeByte = 0x00
+        currentOpcode = $00
+        currentPostbyte = $00
+        currentAddressMSB = $00
+        currentAddressLSB = $00
+        activeByte = $00
         
         cycleCounter = 1
         addressingMode = "p"        
@@ -150,15 +154,15 @@ Rem
         switch (currentOpcode)
         {
             //*----------------------------------------------
-            Case (Byte) 0x4a:
+            Case (Byte) $4a:
                 //*DECB immediate (2 bytes, 2 cycles)
                 switch (cycleCounter)
                 {
                     Case 2:
                         registerB--;
                         If (registerB == 0)
-                            conditionCode = (Byte) (conditionCode | 0x04);
-                        currentOpcode = 0x00;
+                            conditionCode = (Byte) (conditionCode | $04);
+                        currentOpcode = $00;
                         cycleCounter = 0;
                         break;
                 }
@@ -166,40 +170,40 @@ Rem
             
 
             //*----------------------------------------------
-            Case (Byte) 0x00:
+            Case (Byte) $00:
                 //*NOP (Not really; actually NEG!)
-                currentOpcode = 0x00;
+                currentOpcode = $00;
                 cycleCounter = 0;
             break;
             
             //*----------------------------------------------
-            Case (Byte) 0x86:
+            Case (Byte) $86:
                 //*LDA immediate (2 bytes, 2 cycles)
                 switch (cycleCounter)
                 {
                     Case 2:
                         registerA = b;
-                        currentOpcode = 0x00;
+                        currentOpcode = $00;
                         cycleCounter = 0;
                         break;
                 }
             break;
             
             //*----------------------------------------------
-            Case (Byte) 0xC6:
+            Case (Byte) $C6:
                 //*LDB immediate (2 bytes, 2 cycles)
                 switch (cycleCounter)
                 {
                     Case 2:
                         registerB = b;
-                        currentOpcode = 0x00;
+                        currentOpcode = $00;
                         cycleCounter = 0;
                         break;
                 }
             break;
             
            //*----------------------------------------------             
-            Case (Byte) 0x97:
+            Case (Byte) $97:
                 //*STA direct "base page" (2 bytes, 4 cycles)
                 switch (cycleCounter)
                 {
@@ -212,19 +216,19 @@ Rem
                         activeByte = registerA;
                         break;
                     Case 4: //Byte written: reset all                        
-                        currentOpcode = 0x00;
+                        currentOpcode = $00;
                         cycleCounter = 0;
-                        currentAddressLSB = 0x00;
-                        currentAddressMSB = 0x00;
+                        currentAddressLSB = $00;
+                        currentAddressMSB = $00;
                         readWrite = False;
                         addressingMode = 'p';
-                        activeByte = 0x00;
+                        activeByte = $00;
                         break;
                 }
             break;
             
             //*----------------------------------------------
-            Case (Byte) 0xb7:
+            Case (Byte) $b7:
                 //*STA extended "direct" (3 bytes, 5 cycles)
                 switch (cycleCounter)
                 {
@@ -240,13 +244,13 @@ Rem
                         activeByte = registerA;
                         break;
                     Case 5: //Byte written: reset all
-                        currentOpcode = 0x00;
+                        currentOpcode = $00;
                         cycleCounter = 0;
-                        currentAddressLSB = 0x00;
-                        currentAddressMSB = 0x00;
+                        currentAddressLSB = $00;
+                        currentAddressMSB = $00;
                         readWrite = False;
                         addressingMode = 'p';
-                        activeByte = 0x00;
+                        activeByte = $00;
                         break;
                 }   
             break;            
@@ -258,9 +262,6 @@ Rem
         
     }
     
-}
-
-
 Public class MC6847
 {
     RAM Memory;
@@ -303,18 +304,18 @@ Public class RAM
             memoryCells[i] = 0;
         
         //*simple test program
-        memoryCells[0] = (Byte) 0x86; //LDA
-        memoryCells[1] = (Byte) 0x88; //$FF
-        memoryCells[2] = (Byte) 0xb7; //STA
-        memoryCells[3] = (Byte) 0x40; //MSB
-        memoryCells[4] = (Byte) 0x00; //LSB
+        memoryCells[0] = (Byte) $86; //LDA
+        memoryCells[1] = (Byte) $88; //$FF
+        memoryCells[2] = (Byte) $b7; //STA
+        memoryCells[3] = (Byte) $40; //MSB
+        memoryCells[4] = (Byte) $00; //LSB
         
         //*temporary debug routine
         For (Int i=0;i<5;i++)
             System.err.Print("" + memoryCells[i] + "|");
         System.err.println();
         
-        If(memoryCells[0] == (Byte) 0x86)
+        If(memoryCells[0] == (Byte) $86)
             System.err.println("byte recognized as hexadecimal!");
         Else
             If(memoryCells[0] == -122)
