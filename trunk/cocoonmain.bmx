@@ -1,7 +1,19 @@
 'CoCoon main 
 
-Import hardware
-Import peripherals
+'Import "hardware.bmx"
+Import "peripherals.bmx"
 
 
 
+
+
+
+Repeat
+
+
+
+
+
+Until MouseHit(1)
+
+End

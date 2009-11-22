@@ -1,5 +1,15 @@
 Type Display
 	
+	Global singleton:Display
+	Field frequency:Int
+	
+	
+	Function Create:Display()
+		If singleton = Null Then singleton = New Display
+		Return singleton
+	End Function
+
+	
 	Field VideoIn
 	
 	Method New()
