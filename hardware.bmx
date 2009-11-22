@@ -20,18 +20,6 @@ Type Clockable
 EndType
 
 
-Type RAM
-	
-	
-EndType
-
-Type Line Extends Channel
-
-
-EndType 
-
-
-
 '/* Synchronous Address Multiplexer (SAM) Emulator class */
 
 
@@ -48,7 +36,7 @@ Type MC6883
 		
 	EndMethod
 	
-	Method PowerOn(t:Thread)
+	Method PowerOn()'t:Thread
 		
 		
 	EndMethod
@@ -72,7 +60,7 @@ EndRem
 
 EndType
 
-Type MC6809 Extends Clockable
+Type MC6809E Extends Clockable
 
 	Field programCounter : Short 
 	Field registerA : Byte 
@@ -84,7 +72,7 @@ Type MC6809 Extends Clockable
 	Field systemStack : Short 
 	Field userStack : Short
 	Field directPage : Byte
-	Field readWrite : Short
+	Field readWrite : Byte
     
     ' "implied registers"
 	Field currentOpcode : Byte 
@@ -96,56 +84,62 @@ Type MC6809 Extends Clockable
     ' utilitary variables
 	Field cycleCounter : Int
 	Field addressingMode : String
-    
-    ' Object references TODO: obsolete
-        ' initialize
-        programCounter = $0000
-        registerA = $00
-        registerB = $00
-        registerD = $0000
-        conditionCode = $00
-        pointerX = $0000
-        pointerY = $0000
-        systemStack = $0000
-        userStack = $0000
-        directPage = $00
-        readWrite = False
-        
-        currentOpcode = $00
-        currentPostbyte = $00
-        currentAddressMSB = $00
-        currentAddressLSB = $00
-        activeByte = $00
-        
-        cycleCounter = 1
-        addressingMode = "p"        
+
+	'Object references
+	Field memory : RAM
+	
+	
+	Method New()
+		' initialize
+		programCounter = $000000
+		registerA = $00
+		registerB = $00
+		registerD = $0000
+		conditionCode = $00
+		pointerX = $0000
+		pointerY = $0000
+		systemStack = $0000
+		userStack = $0000
+		directPage = $00
+		readWrite = False
+
+		currentOpcode = $00
+		currentPostbyte = $00
+		currentAddressMSB = $00
+		currentAddressLSB = $00
+		activeByte = $00
+
+		cycleCounter = 1
+		addressingMode = "p"
 
     EndMethod
 
-Rem    
-    Public void clockActivate()
-    {
-        Short addressToBeUsed = 0;
-        switch (addressingMode)
-        {
-            Case 'p': //Program Counter
-                addressToBeUsed = programCounter;
-                break;
+	Method clockActivate()
+		
+		Local addressToBeUsed:Short = 0
+		
+		Select addressingMode
+			
+			Case "p" 'Program Counter
+                addressToBeUsed = programCounter
                 
-            Case 'd': //Direct 
-                addressToBeUsed = (Short) ((directPage * 256) + currentAddressLSB);
-                break;
+            Case "d" 'Direct 
+                addressToBeUsed = ((directPage * 256) + currentAddressLSB)
                 
-            Case 'x': //Extended
-                addressToBeUsed = (Short) ((currentAddressMSB * 256) + currentAddressLSB);
-                break;
-        }
-        
-        
-        Byte b = memory.accessMemory(readWrite, addressToBeUsed, activeByte);
-        this.processByte(b);
-    }
-    
+            Case "x" 'Extended
+                addressToBeUsed = ((currentAddressMSB * 256) + currentAddressLSB)
+                
+		End Select
+
+       
+        Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
+        ProcessByte(b)
+
+	EndMethod
+	
+	Method ProcessByte(b:Byte)
+ 	
+	Rem       
     protected void processByte(Byte b)
     {
         If (cycleCounter == 1) //first cycle? 
@@ -261,7 +255,19 @@ Rem
         
         
     }
+
+	EndRem
+
+	
+	EndMethod
+
+
+
+EndType
+
+
     
+Rem 
 Public class MC6847
 {
     RAM Memory;
@@ -288,6 +294,16 @@ Public class MC6847
 EndRem
 
 
+
+Type RAM
+	
+	
+	Method accessMemory(readWrite:Byte, addressToBeUsed:Short, activeByte:Byte)
+		
+		
+		
+	EndMethod
+	
 EndType
 
 
