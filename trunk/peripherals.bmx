@@ -2,6 +2,16 @@ Type Display
 	
 	Global singleton:Display
 	Field frequency:Int
+	Field screen: TPixmap
+	Field VideoIn 'port
+	
+	
+	Method New()
+		
+		
+		
+	EndMethod
+	
 	
 	
 	Function Create:Display()
@@ -9,14 +19,15 @@ Type Display
 		Return singleton
 	End Function
 
+	Method TurnOn()
 	
-	Field VideoIn
-	
-	Method New()
+		screen = CreatePixmap(525, 525, PF_RGBA8888)
+		screen.ClearPixels(0)
 		
-		
-	EndMethod
-	
+	End Method
+    
+
+
 	Method DisplayFrame(frame:Int[], hsync:Int, vsync:Int)
 	
 		Local i:Int = 0
