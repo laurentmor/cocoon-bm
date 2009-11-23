@@ -26,6 +26,12 @@ Type Display
 		
 	End Method
     
+	
+	Method PowerOn()'thread
+		
+		
+		
+	EndMethod
 
 
 	Method DisplayFrame(frame:Int[], hsync:Int, vsync:Int)
@@ -44,12 +50,6 @@ Type Display
 		Next 
 	
 	
-	EndMethod
-	
-	Method PowerOn()'thread
-		
-		
-		
 	EndMethod
 	
 EndType
