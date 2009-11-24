@@ -11,7 +11,7 @@ Function Init()
 	
 	SetGraphicsDriver(GLMax2DDriver())
 	Graphics 825,625
-
+	
 	Local monitor:Display = Display.Create()
 
 	monitor.TurnOn()
