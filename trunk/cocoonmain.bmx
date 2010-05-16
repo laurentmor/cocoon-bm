@@ -3,6 +3,8 @@
 Import "hardware.bmx"
 Import "peripherals.bmx"
 
+Global monitor:Display
+
 Init()
 MainLoop()
 End
@@ -12,7 +14,7 @@ Function Init()
 	SetGraphicsDriver(GLMax2DDriver())
 	Graphics 825,625
 	
-	Global monitor:Display = Display.Create()
+	monitor = Display.Create()
 
 	monitor.TurnOn()
 
@@ -33,9 +35,9 @@ Function MainLoop()
 	
 	Repeat
 	
-		'monitor.Test("test")
+		monitor.Test("test")
 	
-		'monitor.DisplayFrame(frame, 256, 192)
+		monitor.DisplayFrame(frame, 256, 192)
 	
 	
 	
