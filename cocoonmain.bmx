@@ -14,23 +14,33 @@ Function Init()
 	
 	Local monitor:Display = Display.Create()
 
-	monitor.TurnOn()
+	monitor.TurnOn(
 
-
+	monitor.Test("test")
+		
 End Function
 
 
 
 Function MainLoop()
 
+	Local frame:Int[]
+	frame = frame[..147456]
+	
+	For Local i:Int = 0 To Len(frame)-1
+		frame[i] = Rand(0,255)
+	Next 
+	
 	Repeat
 	
+		monitor.Test("test")
 	
+		monitor.DisplayFrame(frame, 256, 192)
 	
 	
 	
 	Until MouseHit(1)
 
-EndFunction
+En  Function
 
 End
