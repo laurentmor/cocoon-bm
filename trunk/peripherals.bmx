@@ -10,14 +10,12 @@ Type Display
 		
 		
 		
-	EndMethod
+	End Method
 	
-	
-	
-	Function Create:Display()
-		If singleton = Null Then singleton = New Display
-		Return singleton
-	End Function
+	Method Test(test:String)'thread
+		
+		
+	End Method
 
 	Method TurnOn()
 	
@@ -27,12 +25,7 @@ Type Display
 	End Method
     
 	
-	Method PowerOn()'thread
-		
-		
-		
-	EndMethod
-
+	
 
 	Method DisplayFrame(frame:Int[], hsync:Int, vsync:Int)
 	
@@ -41,16 +34,25 @@ Type Display
 		For y=1 To vsync	
 		
 			For x=1 To hsync
-				
+
 				'SetPixel(x, y, frame[i])
 				
-				i = i + 1
+				SetColor(frame[i], frame[i+1], frame[i+2])
+				DrawLine(x, y, x+1, y+1)
+				
+				i = i + 3
 			Next 
-			i = i + 1
+			i = i + 3
 		Next 
 	
 	
-	EndMethod
+	End Method
+	
+	Function Create:Display()
+		If singleton = Null Then singleton = New Display
+		Return singleton
+	End Function
+
 	
 EndType
 
