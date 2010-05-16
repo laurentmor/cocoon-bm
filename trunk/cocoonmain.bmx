@@ -5,6 +5,7 @@ Import "peripherals.bmx"
 
 Init()
 MainLoop()
+
 End
 
 Function Init()
