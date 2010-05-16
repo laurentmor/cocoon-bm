@@ -37,8 +37,13 @@ Type Display
 
 				'SetPixel(x, y, frame[i])
 				
-				SetColor(frame[i], frame[i+1], frame[i+2])
-				DrawLine(x, y, x+1, y+1)
+				If i+3 < 147456
+				
+					SetColor(frame[i], frame[i+1], frame[i+2])
+					DrawLine(x, y, x+1, y+1)
+					Flip()
+				
+				End If
 				
 				i = i + 3
 			Next 
