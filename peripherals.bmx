@@ -3,6 +3,7 @@ Type Display
 	Global singleton:Display
 	Field frequency:Int
 	Field screen: TPixmap
+	Field scale:Int
 	Field VideoIn 'port
 	
 	
@@ -12,15 +13,12 @@ Type Display
 		
 	End Method
 	
-	Method Test(test:String)'thread
-		
-		
-	End Method
-
 	Method TurnOn()
 	
 		screen = CreatePixmap(525, 525, PF_RGBA8888)
 		screen.ClearPixels(0)
+		
+		scale = 1
 		
 	End Method
     
