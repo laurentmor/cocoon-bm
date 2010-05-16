@@ -26,14 +26,15 @@ End Function
 
 Function MainLoop()
 
-	Local frame:Int[]
-	frame = frame[..147456]
-	
-	For Local i:Int = 0 To Len(frame)-1
-		frame[i] = Rand(0,255)
-	Next 
-	
 	Repeat
+	
+		Local frame:Int[]
+		frame = frame[..147456]
+		
+		For Local i:Int = 0 To Len(frame)-1
+			frame[i] = Rand(0,255)
+		Next 
+	
 	
 		monitor.Test("test")
 	

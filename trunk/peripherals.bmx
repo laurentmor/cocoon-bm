@@ -31,18 +31,17 @@ Type Display
 	
 		Local i:Int = 0
 		
-		For y=1 To vsync	
+		For y=40 To vsync	
 		
-			For x=1 To hsync
+			For x=40 To hsync
 
 				'SetPixel(x, y, frame[i])
 				
 				If i+3 < 147456
 				
 					SetColor(frame[i], frame[i+1], frame[i+2])
-					DrawLine(x, y, x+1, y+1)
-					Flip()
-				
+					DrawRect(x, y, 1, 1)
+					
 				End If
 				
 				i = i + 3
@@ -50,7 +49,8 @@ Type Display
 			i = i + 3
 		Next 
 	
-	
+		Flip()
+				
 	End Method
 	
 	Function Create:Display()
