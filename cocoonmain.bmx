@@ -18,6 +18,9 @@ Function Init()
 
 	monitor.TurnOn()
 	
+	vidRam:Short = $4000
+	Print vidRam	
+	
 End Function
 
 
@@ -34,6 +37,23 @@ Function MainLoop()
 		Next 
 		
 		monitor.DisplayFrame(frame, 256, 192)
+		
+		Rem
+		For Local j:Int = 0 To 192
+			
+			Local line:Int[] 
+			line = line[..256*3]
+			
+			For Local h:Int = j*0 To j*255
+				Print j*h
+				line[h] = frame[j*h]
+				
+			Next
+			
+			monitor.DisplayLine(line, 256, j)
+		
+		Next
+		EndRem
 		
 	Until MouseHit(1)
 

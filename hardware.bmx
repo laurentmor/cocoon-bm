@@ -120,7 +120,7 @@ Type MC6809E Extends Clockable
 		
 		Select addressingMode
 			
-			Case "p" 'Program Counter
+		Case "p" 'Program Counter
                 addressToBeUsed = programCounter
                 
             Case "d" 'Direct 
@@ -130,10 +130,9 @@ Type MC6809E Extends Clockable
                 addressToBeUsed = ((currentAddressMSB * 256) + currentAddressLSB)
                 
 		End Select
-
        
-        Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
-        ProcessByte(b)
+        	Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
+        	ProcessByte(b)
 
 	EndMethod
 	
@@ -297,8 +296,39 @@ EndRem
 
 Type RAM
 	
+	Field memoryCells:Byte[] 
+		
+	Method New()
+		
+		memoryCells = New Byte[65536]
+		
+		For Local i:Int = 0 To memoryCells.length
+		
+			memoryCells[i] = 0
+		
+		Next
 	
-	Method accessMemory(readWrite:Byte, addressToBeUsed:Short, activeByte:Byte)
+		'simple test program
+	      memoryCells[0] = $86 'LDA
+	      memoryCells[1] = $88 '$FF
+	      memoryCells[2] = $b7 'STA
+	      memoryCells[3] = $40 'MSB
+	      memoryCells[4] = $00 'LSB
+		
+		'simple test graphics
+		vidRam:Short = $4000
+		           
+		For Local j:Int = vidRam + To vidRam + $2000 Step 3
+			
+			memoryCells[j+0] = $ff
+			memoryCells[j+1] = $ff
+			memoryCells[j+2] = $ff
+			
+		Next
+	
+	End Method
+	
+	Method accessMemory:Byte (readWrite:Byte, addressToBeUsed:Short, activeByte:Byte)
 		
 		
 		
@@ -308,11 +338,6 @@ EndType
 
 
 Rem
-
-Public class RAM
-{
-    Byte[] memoryCells;
-    
     Public RAM()
     {
         memoryCells = New Byte[65536];

@@ -4,14 +4,17 @@ Type Display
 	Field frequency:Int
 	Field screen: TPixmap
 	Field scale:Int
+	Field vpos:Int
 	Field VideoIn 'port
-	
-	
+		
 	Method New()
 		
-		
-		
 	End Method
+		
+	Function Create:Display()
+		If singleton = Null Then singleton = New Display
+		Return singleton
+	End Function
 	
 	Method TurnOn()
 	
@@ -22,9 +25,6 @@ Type Display
 		
 	End Method
     
-	
-	
-
 	Method DisplayFrame(frame:Int[], hsync:Int, vsync:Int)
 	
 		Local i:Int = 0
@@ -33,8 +33,6 @@ Type Display
 		
 			For x=40 To hsync
 
-				'SetPixel(x, y, frame[i])
-				
 				If i+3 < 147456
 				
 					SetColor(frame[i], frame[i+1], frame[i+2])
@@ -51,11 +49,23 @@ Type Display
 				
 	End Method
 	
-	Function Create:Display()
-		If singleton = Null Then singleton = New Display
-		Return singleton
-	End Function
+	Method DisplayLine(frame:Int[], hsync:Int, vsync:Int)
 
+		For x=40 To hsync
+
+			If i+3 < 147456
+			
+				SetColor(frame[i], frame[i+1], frame[i+2])
+				DrawRect(x, y, 1, 1)
+				
+			End If
+			
+			i = i + 3
+		Next
+		
+		If vsync = 192 Flip()
+
+	End Method
 	
 EndType
 
