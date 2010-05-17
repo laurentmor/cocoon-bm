@@ -9,6 +9,8 @@ Type Display
 		
 	Method New()
 		
+		Print "Initializing Display monitor."
+		
 	End Method
 		
 	Function Create:Display()
