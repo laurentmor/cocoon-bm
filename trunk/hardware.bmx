@@ -1,4 +1,5 @@
 Type Clockable
+'Superclass for components that can be hooked up to multiplexer
 	
 	Method ClockActivate()
 	
@@ -6,10 +7,8 @@ Type Clockable
 	
 EndType
 
-
-'/* Synchronous Address Multiplexer (SAM) Emulator class */
-
 Type MC6883
+'Synchronous Address Multiplexer (SAM) Emulator class
 	
 	Global singleton:MC6883
 	Field Qlisteners:Clockable[]
@@ -40,44 +39,23 @@ Type MC6883
 	End Method
 	
 	
-	Method PowerOn()'t:Thread
-		
-		Repeat
+	Method PowerIn()
 	
-			For Local q:Clockable = EachIn Qlisteners 
-				
-				q.ClockActivate()
-				
-			Next
+		For Local q:Clockable = EachIn Qlisteners 
 			
-			'TODO: wait (depending on clocking speed)
+			q.ClockActivate()
 			
-			For Local t:Clockable = EachIn Tlisteners 
-				
-				t.ClockActivate()
-				
-			Next
+		Next
 		
-		Until MouseHit(1)
+		'TODO: wait (time span depending on clocking speed)
+		
+		For Local t:Clockable = EachIn Tlisteners 
+			
+			t.ClockActivate()
+			
+		Next
 		
 	EndMethod
-	
-Rem	    
-    Public void powerOn()
-    {
-        For (Int i=0;i<10;i++)
-        {
-            CPU.clockActivate();                        
-            VDG.clockActivate();
-        }
-        
-        //*temporary debug routine
-        Byte b = Memory.memoryCells[16384];
-        System.err.println("16384: " + b);
-                
-    }
-}
-EndRem
 
 EndType
 
@@ -109,33 +87,6 @@ Type MC6847 Extends Clockable
 	End Method
 	
 End Type    
-
-
-Rem 
-Public class MC6847
-{
-    RAM Memory;
-    
-    Public MC6847(RAM mem)
-    {
-        Memory = mem;    
-    }
-    
-    Public void clockActivate()
-    {
-        //accessMemory
-        
-        //processByte(Byte)
-    }
-    
-    protected void processByte(Byte Byte)
-    {
-        
-    }
-    
-    
-}
-EndRem
 
 Type RAM
 	
