@@ -5,6 +5,7 @@ Import "peripherals.bmx"
 
 Global monitor:Display
 Global memory:RAM
+Global SAM:MC6883 
 
 Init()
 MainLoop()
@@ -15,17 +16,21 @@ Function Init()
 	SetGraphicsDriver(GLMax2DDriver())
 	Graphics 296,232
 	
+	'get singleton instances of main hardware components
 	memory = RAM.Create()
+	sam = MC6883.Create()
+	'vdg = MC6847.Create()
+	'cpu = 6809.Create()
 	
+	'connect clockables to multiplexer
+	sam.AddQlistener(cpu)
+	sam.AddTlistener(vdg)
+	
+	'set up display
 	monitor = Display.Create()
 	monitor.TurnOn()
 	
-	vidRam:Short = $4000
-	' Print vidRam	
-	
 End Function
-
-
 
 Function MainLoop()
 
