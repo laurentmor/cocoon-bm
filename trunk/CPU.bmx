@@ -1,3 +1,5 @@
+Strict
+
 Import "hardware.bmx"
 
 Type MC6809E Extends Clockable
@@ -28,8 +30,16 @@ Type MC6809E Extends Clockable
 	'Object references
 	Field memory : RAM
 	
+	Global singleton:MC6809E 
+	'Field memory:RAM
 	
+	Function Create:MC6809E()
+		If singleton = Null Then singleton = New MC6809E
+		Return singleton
+	End Function
+
 	Method New()
+			
 		' initialize
 		programCounter = $000000
 		registerA = $00
@@ -52,10 +62,17 @@ Type MC6809E Extends Clockable
 		cycleCounter = 1
 		addressingMode = "p"
 
-    EndMethod
+	EndMethod
+
+	Method ConnectMemory(mem:RAM)
+	
+		memory = mem
+		
+	End Method
 
 	Method clockActivate()
 		
+		Print"CPU activated!"
 		Local addressToBeUsed:Short = 0
 		
 		Select addressingMode
