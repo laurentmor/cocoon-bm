@@ -1,3 +1,5 @@
+SuperStrict
+
 Type Clockable
 'Superclass for components that can be hooked up to multiplexer
 	
@@ -24,6 +26,8 @@ Type MC6883 Extends Configurable
 	Global singleton:MC6883
 	Field Qlisteners:Clockable[]
 	Field Tlisteners:Clockable[]
+	Field samAddressBus:Short
+	Field extAddressBus:Short
 	
 	Method New()
 		
@@ -49,6 +53,17 @@ Type MC6883 Extends Configurable
 		
 	End Method
 	
+	Method ConnectAdressBus(bus:Short)
+	
+		samAddressBus = bus
+		
+	End Method
+	
+	Method ConnectExtAddressBus(bus:Short)
+	
+		extAddressBus = bus
+		
+	End Method
 	
 	Method PowerIn()
 	
@@ -74,7 +89,8 @@ Type MC6847 Extends Configurable
 'Video Display Generator (VDG) emulation class
 
 	Global singleton:MC6847 
-	'Field memory:RAM
+	Field vdgAddressBus:Short
+	Field vdgDataBus:Byte
 	
 	Function Create:MC6847()
 		If singleton = Null Then singleton = New MC6847 
@@ -85,19 +101,26 @@ Type MC6847 Extends Configurable
 		
 	End Method
 	
-	Method ConnectMemory(mem:RAM)
+	Method ConnectAdressBus(bus:Short)
 	
-		memory = mem
+		vdgAddressBus = bus
+		
+	End Method
+	
+	Method ConnectDataBus(bus:Byte)
+	
+		vdgDataBus = bus
 		
 	End Method
 	
 	Method ClockActivate()
 	
-		Print"VDG activated!"
-		'TODO accessmemory
+		'OBSOLETE:  etByte:Byte =amemory.accessMemory(False, $4000, Null)m		
+		'TODO: set address bus
 		
-		'TODO processbyte
-	
+		'TODO: read data bus		
+		'ProcessByte(getByte)
+		
 	End Method
 	
 	Method ProcessByte(b:Byte)
@@ -180,34 +203,24 @@ Type RAM
 	
 	Global singleton:RAM
 	
-	'Field memoryCells:Byte[] 
+	Field ramAddressBus:Short
+	Field ramDataBus:Byte
 	Field memoryElements:MemoryElement[]
 	
 	Method New()
 		
 		Print "Initializing RAM memory."
 		
-		'memoryCells = New Byte[65536]
 		memoryElements = New MemoryElement[65536]
 		
 		For Local i:Int = 0 To memoryElements .length - 1
 		
-			'memoryCells[i] = 0
 			memoryElements[i] = New MemoryElement
 			memoryElements[i].SetByte($00)
 
 					
 		Next
 	
-		Rem
-		'simple test program
-	      memoryCells[0] = $86 'LDA
-	      memoryCells[1] = $88 '$FF
-	      memoryCells[2] = $b7 'STA
-	      memoryCells[3] = $40 'MSB
-	      memoryCells[4] = $00 'LSB
-		End Rem
-		
 		'simple test program
 	      memoryElements[0].SetByte($86) 'LDA
 	      memoryElements[1].SetByte($88) '$FF
@@ -215,18 +228,8 @@ Type RAM
 	      memoryElements[3].SetByte($40) 'MSB
 	      memoryElements[4].SetByte($00) 'LSB
 		
-		Rem 
 		'simple test graphics
-		vidRam:Short = $4000
-		For Local j:Int = vidRam  To vidRam + $2000 Step 3
-			memoryCells[j+0] = $ff
-			memoryCells[j+1] = $ff
-			memoryCells[j+2] = $ff
-		Next
-		End Rem
-	
-		'simple test graphics
-		vidRam:Short = $4000
+		Local vidRam:Short = $4000
 		For Local k:Int = vidRam  To vidRam + $2000 Step 3
 			memoryElements[k+0].SetByte($ff)
 			memoryElements[k+1].SetByte($00)
@@ -240,6 +243,18 @@ Type RAM
 		If singleton = Null Then singleton = New RAM
 		Return singleton
 	End Function
+	
+	Method ConnectAdressBus(bus:Short)
+	
+		ramAddressBus = bus
+		
+	End Method
+	
+	Method ConnectDataBus(bus:Byte)
+	
+		ramDataBus = bus
+		
+	End Method
 	
 	Method accessMemory:Byte (readWrite:Byte, addressToBeUsed:Short, activeByte:Byte)
 		
@@ -255,7 +270,7 @@ Type RAM
 		
 	EndMethod
 	
-	Method readMemory(memoryAddress:Short)
+	Method readMemory:Byte(memoryAddress:Short)
     
 		Return memoryElements[memoryAddress].GetByte()
 
@@ -263,7 +278,7 @@ Type RAM
     
 	Method writeMemory(memoryAddress:Short, memoryByte:Byte)
 
-      	memoryElements[addressToBeUsed].SetByte(memoryByte)
+      	memoryElements[memoryAddress].SetByte(memoryByte)
 	
 	End Method
 	
