@@ -116,9 +116,11 @@ Type MC6847 Extends Configurable
 	Method ClockActivate()
 	
 		'OBSOLETE:  etByte:Byte =amemory.accessMemory(False, $4000, Null)m		
+		
 		'TODO: set address bus
 		
 		'TODO: read data bus		
+		
 		'ProcessByte(getByte)
 		
 	End Method

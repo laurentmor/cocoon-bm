@@ -92,10 +92,17 @@ Type MC6809E Extends Clockable
                 addressToBeUsed = ((currentAddressMSB * 256) + currentAddressLSB)
                 
 		End Select
-       
+       	
+		Rem OBSOLETE
         	'Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
-        	'ProcessByte(b)
-
+        	End Rem
+		
+		'TODO: set address bus
+		
+		'TODO: read data bus		
+		
+		'ProcessByte(b)
+		
 	EndMethod
 	
 	Method ProcessByte(b:Byte)
