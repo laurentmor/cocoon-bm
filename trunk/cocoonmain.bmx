@@ -9,6 +9,8 @@ Global memory:RAM
 Global SAM:MC6883 
 Global vdg:MC6847
 Global cpu:MC6809E 
+Global addressBus:Short
+Global dataBus:Byte
 
 Init()
 MainLoop()
@@ -19,13 +21,20 @@ Function Init()
 	SetGraphicsDriver(GLMax2DDriver())
 	Graphics 296,232
 	
-	'get singleton instances of main hardware components
 	memory = RAM.Create()
+	memory.ConnectAdressBus(addressBus)
+	memory.ConnectDataBus(dataBus)
+	
 	sam = MC6883.Create()
+	sam.ConnectAdressBus(addressBus)
+	
 	vdg = MC6847.Create()
-	'vdg.ConnectMemory(memory)
+	vdg.ConnectAdressBus(sam.extAddressBus)
+	vdg.ConnectDataBus(dataBus)
+	
 	cpu = MC6809E.Create()
-	cpu.ConnectMemory(memory)
+	cpu.ConnectAdressBus(addressBus)
+	cpu.ConnectDataBus(dataBus)
 	
 	'connect clockables to multiplexer
 	sam.AddQlistener(cpu)

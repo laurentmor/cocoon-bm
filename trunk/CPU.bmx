@@ -4,6 +4,9 @@ Import "hardware.bmx"
 
 Type MC6809E Extends Clockable
 
+	Field cpuAddressBus:Short
+	Field cpuDataBus:Byte
+	
 	Field programCounter : Short 
 	Field registerA : Byte 
 	Field registerB : Byte 
@@ -27,11 +30,7 @@ Type MC6809E Extends Clockable
 	Field cycleCounter : Int
 	Field addressingMode : String
 
-	'Object references
-	Field memory : RAM
-	
 	Global singleton:MC6809E 
-	'Field memory:RAM
 	
 	Function Create:MC6809E()
 		If singleton = Null Then singleton = New MC6809E
@@ -64,15 +63,21 @@ Type MC6809E Extends Clockable
 
 	EndMethod
 
-	Method ConnectMemory(mem:RAM)
+	Method ConnectAdressBus(bus:Short)
 	
-		memory = mem
+		cpuAddressBus = bus
 		
 	End Method
+	
+	Method ConnectDataBus(bus:Byte)
+	
+		cpuDataBus = bus
+		
+	End Method
+	
 
 	Method clockActivate()
 		
-		Print"CPU activated!"
 		Local addressToBeUsed:Short = 0
 		
 		Select addressingMode
@@ -88,8 +93,8 @@ Type MC6809E Extends Clockable
                 
 		End Select
        
-        	Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
-        	ProcessByte(b)
+        	'Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
+        	'ProcessByte(b)
 
 	EndMethod
 	
