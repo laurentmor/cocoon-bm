@@ -1,11 +1,14 @@
-'CoCoon main 
+SuperStrict 
 
 Import "hardware.bmx"
+Import "CPU.bmx"
 Import "peripherals.bmx"
 
 Global monitor:Display
 Global memory:RAM
 Global SAM:MC6883 
+Global vdg:MC6847
+Global cpu:MC6809E 
 
 Init()
 MainLoop()
@@ -19,8 +22,10 @@ Function Init()
 	'get singleton instances of main hardware components
 	memory = RAM.Create()
 	sam = MC6883.Create()
-	'vdg = MC6847.Create()
-	'cpu = 6809.Create()
+	vdg = MC6847.Create()
+	'vdg.ConnectMemory(memory)
+	cpu = MC6809E.Create()
+	cpu.ConnectMemory(memory)
 	
 	'connect clockables to multiplexer
 	sam.AddQlistener(cpu)
@@ -36,35 +41,7 @@ Function MainLoop()
 
 	Repeat
 	
-		Local frame:Int[]
-		frame = frame[..147456]
-		
-		
-		For Local i:Int = 0 To Len(frame)-1
-			'frame[i] = Rand(0,255)
-			
-			frame[i] = memory.accessMemory(False, i + $4000, Null)
-			'Print frame[i]
-		Next 
-		
-		monitor.DisplayFrame(frame, 256, 192)
-		
-		Rem
-		For Local j:Int = 0 To 192
-			
-			Local line:Int[] 
-			line = line[..256*3]
-			
-			For Local h:Int = j*0 To j*255
-				Print j*h
-				line[h] = frame[j*h]
-				
-			Next
-			
-			monitor.DisplayLine(line, 256, j)
-		
-		Next
-		EndRem
+		sam.PowerIn()
 		
 	Until MouseHit(1)
 
