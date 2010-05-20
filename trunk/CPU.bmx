@@ -1,6 +1,6 @@
 Strict
 
-Import "hardware.bmx"
+Import "common.bmx"
 
 Type MC6809E Extends Clockable
 
@@ -38,7 +38,9 @@ Type MC6809E Extends Clockable
 	End Function
 
 	Method New()
-			
+	
+		Print "setting up CPU"
+	
 		' initialize
 		programCounter = $000000
 		registerA = $00
