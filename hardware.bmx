@@ -1,24 +1,6 @@
 SuperStrict
 
-Type Clockable
-'Superclass for components that can be hooked up to multiplexer
-	
-	Method ClockActivate()
-	
-	End Method
-	
-EndType
-
-Type Configurable Extends Clockable
-'Superclass for clockable components that can be configured through memory addresses
-
-	Method SetRegister()
-		
-		
-		
-	End Method
-
-End Type 
+Import "common.bmx"
 
 Type MC6883 Extends Configurable 
 'Synchronous Address Multiplexer (SAM) emulation class
@@ -30,7 +12,9 @@ Type MC6883 Extends Configurable
 	Field extAddressBus:Short
 	
 	Method New()
-		
+	
+		Print "setting up SAM"	
+	
 		Qlisteners = New Clockable[1]
 		Tlisteners = New Clockable[1]
 		
@@ -68,7 +52,9 @@ Type MC6883 Extends Configurable
 	Method PowerIn()
 	
 		For Local q:Clockable = EachIn Qlisteners 
-			
+		
+			'TODO: set address bus
+					
 			q.ClockActivate()
 			
 		Next
@@ -77,11 +63,19 @@ Type MC6883 Extends Configurable
 		
 		For Local t:Clockable = EachIn Tlisteners 
 			
+			'TODO: set address bus
+					
 			t.ClockActivate()
 			
 		Next
 		
 	EndMethod
+	
+	Method RefreshMemory() 	
+		
+		
+		
+	End Method
 
 EndType
 
@@ -98,7 +92,9 @@ Type MC6847 Extends Configurable
 	End Function
 
 	Method New()
-		
+	
+		Print "setting up VDG"	
+	
 	End Method
 	
 	Method ConnectAdressBus(bus:Short)
@@ -283,6 +279,8 @@ Type RAM
       	memoryElements[memoryAddress].SetByte(memoryByte)
 	
 	End Method
+	
+	
 	
 EndType
 

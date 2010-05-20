@@ -18,6 +18,8 @@ End
 
 Function Init()
 	
+	Print "Initializing..."
+	
 	SetGraphicsDriver(GLMax2DDriver())
 	Graphics 296,232
 	
@@ -36,6 +38,7 @@ Function Init()
 	cpu.ConnectAdressBus(addressBus)
 	cpu.ConnectDataBus(dataBus)
 	
+	Print "connecting clockables to multiplexer"
 	'connect clockables to multiplexer
 	sam.AddQlistener(cpu)
 	sam.AddTlistener(vdg)
