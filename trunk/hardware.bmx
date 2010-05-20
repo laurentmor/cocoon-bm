@@ -7,7 +7,7 @@ Type MC6883 Extends Configurable
 	
 	Global singleton:MC6883
 	Field Qlisteners:Clockable[]
-	Field Tlisteners:Clockable[]
+	Field Elisteners:Clockable[]
 	Field samAddressBus:Short
 	Field extAddressBus:Short
 	
@@ -16,7 +16,7 @@ Type MC6883 Extends Configurable
 		Print "setting up SAM"	
 	
 		Qlisteners = New Clockable[1]
-		Tlisteners = New Clockable[1]
+		Elisteners = New Clockable[1]
 		
 	End Method
 	
@@ -31,9 +31,9 @@ Type MC6883 Extends Configurable
 		
 	End Method
 	
-	Method AddTlistener(t:Clockable)
+	Method AddElistener(e:Clockable)
 	
-		Tlisteners[0] = t
+		Elisteners[0] = e
 		
 	End Method
 	
@@ -61,11 +61,11 @@ Type MC6883 Extends Configurable
 		
 		'TODO: wait (time span depending on clocking speed)
 		
-		For Local t:Clockable = EachIn Tlisteners 
+		For Local e:Clockable = EachIn Elisteners 
 			
 			'TODO: set address bus
 					
-			t.ClockActivate()
+			e.ClockActivate()
 			
 		Next
 		
@@ -76,6 +76,9 @@ Type MC6883 Extends Configurable
 		
 		
 	End Method
+	
+	Rem http://www.bighole.nl/pub/mirror/homepage.ntlworld.com/kryten_droid/coco/coco_tm_s3.htm
+	EndRem
 
 EndType
 

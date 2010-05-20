@@ -11,6 +11,7 @@ Global vdg:MC6847
 Global cpu:MC6809E 
 Global addressBus:Short
 Global dataBus:Byte
+'Global readWriteLine:Byte
 
 Init()
 MainLoop()
@@ -40,8 +41,16 @@ Function Init()
 	
 	Print "connecting clockables to multiplexer"
 	'connect clockables to multiplexer
-	sam.AddQlistener(cpu)
-	sam.AddTlistener(vdg)
+	sam.AddElistener(cpu)
+	sam.AddQlistener(vdg)
+	
+	Rem BUT! 
+	
+		Video memory is accessed during E=low
+		and CPU memory is accessed during E=high
+		How about Q then? 
+		
+	End Rem
 	
 	'set up display
 	monitor = Display.Create()
