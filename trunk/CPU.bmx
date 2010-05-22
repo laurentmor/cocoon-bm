@@ -77,30 +77,29 @@ Type MC6809E Extends Clockable
 		
 	End Method
 	
+	Method ClockAddressBus()
+	
+		cpuAddressBus = programCounter 
+	
+	End Method
 
-	Method clockActivate()
+	Method ClockDataFetch()
 		
 		Local addressToBeUsed:Short = 0
 		
 		Select addressingMode
 			
-		Case "p" 'Program Counter
+			Case "p" 'Program Counter
                 addressToBeUsed = programCounter
                 
-            Case "d" 'Direct 
+			Case "d" 'Direct 
                 addressToBeUsed = ((directPage * 256) + currentAddressLSB)
                 
-            Case "x" 'Extended
+			Case "x" 'Extended
                 addressToBeUsed = ((currentAddressMSB * 256) + currentAddressLSB)
                 
 		End Select
        	
-		Rem OBSOLETE
-        	'Local b:Byte = memory.accessMemory(readWrite, addressToBeUsed, activeByte)
-        	End Rem
-		
-		'TODO: set address bus
-		
 		'TODO: read data bus		
 		
 		'ProcessByte(b)
