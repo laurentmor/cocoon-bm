@@ -6,17 +6,22 @@ Type MC6883 Extends Configurable
 'Synchronous Address Multiplexer (SAM) emulation class
 	
 	Global singleton:MC6883
-	Field Qlisteners:Clockable[]
-	Field Elisteners:Clockable[]
+	Field Suckers:Clockable[]
+	Field Rulers:Clockable[]
 	Field samAddressBus:Short
 	Field extAddressBus:Short
+	Field E:Byte
+	Field Q:Byte
 	
 	Method New()
 	
 		Print "setting up SAM"	
 	
-		Qlisteners = New Clockable[1]
-		Elisteners = New Clockable[1]
+		Suckers = New Clockable[1]
+		Rulers = New Clockable[1]
+		
+		E = $00
+		Q = $ff
 		
 	End Method
 	
@@ -25,15 +30,15 @@ Type MC6883 Extends Configurable
 		Return singleton
 	End Function
 
-	Method AddQlistener(q:Clockable)
+	Method AddSucker(q:Clockable)
 	
-		Qlisteners[0] = q
+		Suckers[0] = q
 		
 	End Method
 	
-	Method AddElistener(e:Clockable)
+	Method AddRuler(e:Clockable)
 	
-		Elisteners[0] = e
+		Rulers[0] = e
 		
 	End Method
 	
@@ -50,24 +55,60 @@ Type MC6883 Extends Configurable
 	End Method
 	
 	Method PowerIn()
+				
+		'Clock cycle
+		
+		If E = $00 And Q = $00
+		
+			For Local q:Clockable = EachIn Suckers 
+			
+				'TODO: set address bus
+				
+			Next
+			
+			Q = $ff
 	
-		For Local q:Clockable = EachIn Qlisteners 
+		End If
 		
-			'TODO: set address bus
-					
-			q.ClockActivate()
-			
-		Next
+		If E= $00 And Q = $ff
 		
-		'TODO: wait (time span depending on clocking speed)
+			For Local q:Clockable = EachIn Suckers 
+			
+				'TODO: enable data fetch
+				
+			Next
+			
+			E = $ff
 		
-		For Local e:Clockable = EachIn Elisteners 
+		End If
+		
+		If E = $ff And Q = $ff	
+		
+			For Local e:Clockable = EachIn Rulers 
+				
+				'TODO: enable set address bus
+				
+			Next
 			
-			'TODO: set address bus
-					
-			e.ClockActivate()
+			Q = $00
+		
+		End If
+		
+		If E = $ff And Q = $00
+		
+			For Local e:Clockable = EachIn Rulers 
+				
+				'TODO: enable data fetch
+				
+			Next
 			
-		Next
+			Q = $ff
+		
+		End If
+		
+		'TODO: wait (time span depending on clocking speed) - time passed (unless result < 0)
+		
+		'TODO: reset time passed variable
 		
 	EndMethod
 	
@@ -76,9 +117,6 @@ Type MC6883 Extends Configurable
 		
 		
 	End Method
-	
-	Rem http://www.bighole.nl/pub/mirror/homepage.ntlworld.com/kryten_droid/coco/coco_tm_s3.htm
-	EndRem
 
 EndType
 
@@ -86,6 +124,7 @@ Type MC6847 Extends Configurable
 'Video Display Generator (VDG) emulation class
 
 	Global singleton:MC6847 
+	Field addressCounter:Short
 	Field vdgAddressBus:Short
 	Field vdgDataBus:Byte
 	
@@ -112,12 +151,8 @@ Type MC6847 Extends Configurable
 		
 	End Method
 	
-	Method ClockActivate()
+	Method ClockDataFetch()
 	
-		'OBSOLETE:  etByte:Byte =amemory.accessMemory(False, $4000, Null)m		
-		
-		'TODO: set address bus
-		
 		'TODO: read data bus		
 		
 		'ProcessByte(getByte)
