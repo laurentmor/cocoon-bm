@@ -11,7 +11,7 @@ Global vdg:MC6847
 Global cpu:MC6809E 
 Global addressBus:Short
 Global dataBus:Byte
-'Global readWriteLine:Byte
+Global readWrite:Byte
 
 Init()
 MainLoop()
@@ -39,10 +39,12 @@ Function Init()
 	cpu.ConnectAdressBus(addressBus)
 	cpu.ConnectDataBus(dataBus)
 	
-	Print "connecting clockables to multiplexer"
+	Print "connecting components to multiplexer"
 	'connect clockables to multiplexer
 	sam.AddRuler(cpu)
-	sam.AddSucker(cpu)
+	sam.AddSucker(vdg)
+	sam.ConnectMemory(memory)
+	readWrite = $00
 
 	'set up display
 	monitor = Display.Create()

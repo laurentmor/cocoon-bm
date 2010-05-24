@@ -78,13 +78,15 @@ Type MC6809E Extends Clockable
 	End Method
 	
 	Method ClockAddressBus()
-	
+		
+		Print " - CPU set Address Bus"
 		cpuAddressBus = programCounter 
 	
 	End Method
 
-	Method ClockDataFetch()
+	Method ClockDataBus()
 		
+		Print " - CPU Data Bus read/write"
 		Local addressToBeUsed:Short = 0
 		
 		Select addressingMode
@@ -100,9 +102,15 @@ Type MC6809E Extends Clockable
                 
 		End Select
        	
-		'TODO: read data bus		
+		If readWrite = $00
+			Print "CPU Data Read"
+		Else
+			Print "CPU Data Write"
+		End If
 		
-		'ProcessByte(b)
+		Local b:Byte = cpuDataBus 'read data bus		
+		
+		ProcessByte(b)
 		
 	EndMethod
 	

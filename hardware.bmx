@@ -8,10 +8,14 @@ Type MC6883 Extends Configurable
 	Global singleton:MC6883
 	Field Suckers:Clockable[]
 	Field Rulers:Clockable[]
+	Field addressCounter:Short
 	Field samAddressBus:Short
 	Field extAddressBus:Short
+	Field memory:RAM 
 	Field E:Byte
 	Field Q:Byte
+	Field lastQuadrant:Float
+	Field clockingSpeed:Float
 	
 	Method New()
 	
@@ -21,8 +25,10 @@ Type MC6883 Extends Configurable
 		Rulers = New Clockable[1]
 		
 		E = $00
-		Q = $ff
+		Q = $00
 		
+		clockingSpeed = 0.0000885
+				
 	End Method
 	
 	Function Create:MC6883()
@@ -54,69 +60,94 @@ Type MC6883 Extends Configurable
 		
 	End Method
 	
+	Method ConnectMemory(mem:RAM)
+	
+		memory = mem
+		
+	End Method
+	
 	Method PowerIn()
 				
 		'Clock cycle
-		
+		Print""
+		'Print"Cycle in: E = " + E + ", Q = " + Q 
 		If E = $00 And Q = $00
-		
-			For Local q:Clockable = EachIn Suckers 
 			
+			Print "ElQl"
+			
+			For Local q:Clockable = EachIn Suckers 
+				
+				Print "- set VDG address bus" 
 				'TODO: set address bus
+				'samAddressBus = 
 				
 			Next
 			
 			Q = $ff
 	
-		End If
+		ElseIf E= $00 And Q = $ff
 		
-		If E= $00 And Q = $ff
-		
-			For Local q:Clockable = EachIn Suckers 
+			Print "ElQh"
 			
-				'TODO: enable data fetch
+			For Local q:Clockable = EachIn Suckers 
+				
+				'TODO: enable data read/write
+				q.ClockDataBus()
 				
 			Next
 			
+			'TODO refresh memory
+			
 			E = $ff
 		
-		End If
+		ElseIf E = $ff And Q = $ff	
 		
-		If E = $ff And Q = $ff	
-		
+			Print "EhQh"
+			
 			For Local e:Clockable = EachIn Rulers 
 				
 				'TODO: enable set address bus
+				e.ClockAddressBus()
 				
 			Next
 			
 			Q = $00
 		
-		End If
+		ElseIf E = $ff And Q = $00
 		
-		If E = $ff And Q = $00
-		
+			Print "EhQl"
+			
 			For Local e:Clockable = EachIn Rulers 
 				
 				'TODO: enable data fetch
+				e.ClockDataBus()
 				
 			Next
 			
-			Q = $ff
+			'TODO refresh memory
+			
+			E = $00
 		
 		End If
 		
-		'TODO: wait (time span depending on clocking speed) - time passed (unless result < 0)
+		Rem *Delay as based on processor speed. However, we only got milliseconds? *
 		
-		'TODO: reset time passed variable
+		'Wait (time span depending on clocking speed) - time passed (unless result < 0)
+		Local timePassed:Float  = MilliSecs() - lastQuadrant 'TODO: Whoah! We need nanoseconds!!
+		Print "time passed: " + timePassed
+		Local waitTime:Float = clockingSpeed - timePassed
+		If waitTime > 0 
+			Delay(waitTime)
+		End If
+		
+		'reset time passed variable
+		lastQuadrant = MilliSecs()
+		
+		'WaitKey()
+		
+		End Rem
 		
 	EndMethod
-	
-	Method RefreshMemory() 	
-		
-		
-		
-	End Method
 
 EndType
 
@@ -151,8 +182,16 @@ Type MC6847 Extends Configurable
 		
 	End Method
 	
-	Method ClockDataFetch()
+	Method ClockAddressBus()
 	
+		Print " - VDG set Address Bus"
+		'TODO: set address bus
+	
+	End Method
+	
+	Method ClockDataBus()
+		
+		Print " - VDG Data Bus read"
 		'TODO: read data bus		
 		
 		'ProcessByte(getByte)
@@ -292,6 +331,12 @@ Type RAM
 		
 	End Method
 	
+	Method Refresh()
+	
+		
+	
+	End Method
+	
 	Method accessMemory:Byte (readWrite:Byte, addressToBeUsed:Short, activeByte:Byte)
 		
 		If readWrite
@@ -317,8 +362,6 @@ Type RAM
       	memoryElements[memoryAddress].SetByte(memoryByte)
 	
 	End Method
-	
-	
 	
 EndType
 
