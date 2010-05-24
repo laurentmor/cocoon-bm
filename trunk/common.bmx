@@ -7,7 +7,7 @@ Type Clockable
 	
 	End Method
 		
-	Method ClockDataFetch()
+	Method ClockDataBus()
 	
 	End Method
 	
