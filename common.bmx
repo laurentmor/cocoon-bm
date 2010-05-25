@@ -23,4 +23,3 @@ Type Configurable Extends Clockable
 	End Method
 
 End Type 
-

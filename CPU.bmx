@@ -234,7 +234,10 @@ Type MC6809E Extends Clockable
     }
 
 	EndRem
-
+	
+	programCounter = programCounter + 1
+	
+	Print "CPU programCounter: " + programCounter 
 	
 	EndMethod
 

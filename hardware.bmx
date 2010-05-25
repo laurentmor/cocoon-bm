@@ -27,7 +27,7 @@ Type MC6883 Extends Configurable
 		E = $00
 		Q = $00
 		
-		clockingSpeed = 0.0000885
+		clockingSpeed = 0.885
 				
 	End Method
 	
@@ -78,9 +78,16 @@ Type MC6883 Extends Configurable
 			For Local q:Clockable = EachIn Suckers 
 				
 				Print "- set VDG address bus" 
-				'TODO: set address bus
-				'samAddressBus = 
 				
+				samAddressBus = addressCounter
+				
+				addressCounter = addressCounter + 1
+				If addressCounter > $8000 'TODO value determined by screen mode
+					addressCounter = $2000
+				End If
+				
+				Print "SAM addressCounter: " + addressCounter
+		
 			Next
 			
 			Q = $ff
@@ -96,7 +103,7 @@ Type MC6883 Extends Configurable
 				
 			Next
 			
-			'TODO refresh memory
+			memory.Refresh()
 			
 			E = $ff
 		
@@ -124,7 +131,7 @@ Type MC6883 Extends Configurable
 				
 			Next
 			
-			'TODO refresh memory
+			memory.Refresh()
 			
 			E = $00
 		
@@ -185,16 +192,23 @@ Type MC6847 Extends Configurable
 	Method ClockAddressBus()
 	
 		Print " - VDG set Address Bus"
-		'TODO: set address bus
-	
+		vdgAddressBus = addressCounter
+		
+		addressCounter = addressCounter + 1
+		If addressCounter > $8000 'TODO value determined by screen mode
+			addressCounter = $2000	
+		End If
+		
+		Print "VDG addressCounter: " + addressCounter
+		
 	End Method
 	
 	Method ClockDataBus()
 		
 		Print " - VDG Data Bus read"
-		'TODO: read data bus		
+		Local getByte:Byte = vdgDataBus 	
 		
-		'ProcessByte(getByte)
+		ProcessByte(getByte)
 		
 	End Method
 	
