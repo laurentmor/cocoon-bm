@@ -30,6 +30,9 @@ Type MC6809E Extends Clockable
 	Field cycleCounter : Int
 	Field addressingMode : String
 
+	'temp/test
+	Field nrofCycles : Int
+	
 	Global singleton:MC6809E 
 	
 	Function Create:MC6809E()
@@ -39,7 +42,7 @@ Type MC6809E Extends Clockable
 
 	Method New()
 	
-		Print "setting up CPU"
+		'Print "setting up CPU"
 	
 		' initialize
 		programCounter = $000000
@@ -79,14 +82,16 @@ Type MC6809E Extends Clockable
 	
 	Method ClockAddressBus()
 		
-		Print " - CPU set Address Bus"
+		'Print " - CPU set Address Bus"
 		cpuAddressBus = programCounter 
-	
+		
+		nrofCycles = nrofCycles + 1
+		
 	End Method
 
 	Method ClockDataBus()
 		
-		Print " - CPU Data Bus read/write"
+		'Print " - CPU Data Bus read/write"
 		Local addressToBeUsed:Short = 0
 		
 		Select addressingMode
@@ -103,9 +108,9 @@ Type MC6809E Extends Clockable
 		End Select
        	
 		If readWrite = $00
-			Print "CPU Data Read"
+			'Print "CPU Data Read"
 		Else
-			Print "CPU Data Write"
+			'Print "CPU Data Write"
 		End If
 		
 		Local b:Byte = cpuDataBus 'read data bus		
@@ -237,7 +242,7 @@ Type MC6809E Extends Clockable
 	
 	programCounter = programCounter + 1
 	
-	Print "CPU programCounter: " + programCounter 
+	'Print "CPU programCounter: " + programCounter 
 	
 	EndMethod
 

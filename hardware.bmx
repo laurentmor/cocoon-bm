@@ -19,7 +19,7 @@ Type MC6883 Extends Configurable
 	
 	Method New()
 	
-		Print "setting up SAM"	
+		'Print "setting up SAM"	
 	
 		Suckers = New Clockable[1]
 		Rulers = New Clockable[1]
@@ -69,15 +69,15 @@ Type MC6883 Extends Configurable
 	Method PowerIn()
 				
 		'Clock cycle
-		Print""
-		'Print"Cycle in: E = " + E + ", Q = " + Q 
+		'Print""
+		''Print"Cycle in: E = " + E + ", Q = " + Q 
 		If E = $00 And Q = $00
 			
-			Print "ElQl"
+			'Print "ElQl"
 			
 			For Local q:Clockable = EachIn Suckers 
 				
-				Print "- set VDG address bus" 
+				'Print "- set VDG address bus" 
 				
 				samAddressBus = addressCounter
 				
@@ -86,7 +86,7 @@ Type MC6883 Extends Configurable
 					addressCounter = $2000
 				End If
 				
-				Print "SAM addressCounter: " + addressCounter
+				'Print "SAM addressCounter: " + addressCounter
 		
 			Next
 			
@@ -94,7 +94,7 @@ Type MC6883 Extends Configurable
 	
 		ElseIf E= $00 And Q = $ff
 		
-			Print "ElQh"
+			'Print "ElQh"
 			
 			For Local q:Clockable = EachIn Suckers 
 				
@@ -109,7 +109,7 @@ Type MC6883 Extends Configurable
 		
 		ElseIf E = $ff And Q = $ff	
 		
-			Print "EhQh"
+			'Print "EhQh"
 			
 			For Local e:Clockable = EachIn Rulers 
 				
@@ -122,7 +122,7 @@ Type MC6883 Extends Configurable
 		
 		ElseIf E = $ff And Q = $00
 		
-			Print "EhQl"
+			'Print "EhQl"
 			
 			For Local e:Clockable = EachIn Rulers 
 				
@@ -141,7 +141,7 @@ Type MC6883 Extends Configurable
 		
 		'Wait (time span depending on clocking speed) - time passed (unless result < 0)
 		Local timePassed:Float  = MilliSecs() - lastQuadrant 'TODO: Whoah! We need nanoseconds!!
-		Print "time passed: " + timePassed
+		'Print "time passed: " + timePassed
 		Local waitTime:Float = clockingSpeed - timePassed
 		If waitTime > 0 
 			Delay(waitTime)
@@ -173,7 +173,7 @@ Type MC6847 Extends Configurable
 
 	Method New()
 	
-		Print "setting up VDG"	
+		'Print "setting up VDG"	
 	
 	End Method
 	
@@ -191,7 +191,7 @@ Type MC6847 Extends Configurable
 	
 	Method ClockAddressBus()
 	
-		Print " - VDG set Address Bus"
+		'Print " - VDG set Address Bus"
 		vdgAddressBus = addressCounter
 		
 		addressCounter = addressCounter + 1
@@ -199,13 +199,13 @@ Type MC6847 Extends Configurable
 			addressCounter = $2000	
 		End If
 		
-		Print "VDG addressCounter: " + addressCounter
+		'Print "VDG addressCounter: " + addressCounter
 		
 	End Method
 	
 	Method ClockDataBus()
 		
-		Print " - VDG Data Bus read"
+		'Print " - VDG Data Bus read"
 		Local getByte:Byte = vdgDataBus 	
 		
 		ProcessByte(getByte)
@@ -229,7 +229,7 @@ Type MC6847 Extends Configurable
 			'frame[i] = Rand(0,255)
 			
 			frame[i] = memory.accessMemory(False, i + $4000, Null)
-			'Print frame[i]
+			''Print frame[i]
 		Next 
 		
 		monitor.DisplayFrame(frame, 256, 192)
@@ -241,7 +241,7 @@ Type MC6847 Extends Configurable
 			line = line[..256*3]
 			
 			For Local h:Int = j*0 To j*255
-				Print j*h
+				'Print j*h
 				line[h] = frame[j*h]
 				
 			Next
@@ -298,7 +298,7 @@ Type RAM
 	
 	Method New()
 		
-		Print "Initializing RAM memory."
+		'Print "Initializing RAM memory."
 		
 		memoryElements = New MemoryElement[65536]
 		
