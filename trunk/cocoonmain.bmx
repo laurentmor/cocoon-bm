@@ -62,16 +62,19 @@ Function MainLoop()
 		
 	Until MouseHit(1)
 
-	Local timePassed:Int = (MilliSecs() - time)
+	Local timePassed:Float = (MilliSecs() - time)
 	
-	Local freq:Double = (CPU.programCounter / timePassed)
+	Local cycles:Float = CPU.nrofCycles 
+	
+	Local freq:Float = (cycles / timePassed)
 	
 	Print 
 	Print "time passed: " + timePassed + " ms"
-	Print 
-	Print "CPU frequency: " + freq + " KHz" 
+	Print "nr of cycles: " + CPU.nrofCycles 
+	Print "CPU frequency: " + freq + " KHz or " + freq/1000 + " MHz" 
 
 End Function
 
 End
+
 
